@@ -6,7 +6,7 @@
 /*   By: lkiloul <lkiloul@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 12:33:02 by lkiloul           #+#    #+#             */
-/*   Updated: 2025/03/29 13:42:58 by lkiloul          ###   ########.fr       */
+/*   Updated: 2025/03/29 15:33:22 by lkiloul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void send(int PID, unsigned char character)
             kill(PID, SIGUSR2);
         else
             kill(PID, SIGUSR1);
-        usleep(42);
+        usleep(100);
     }
 }
 
