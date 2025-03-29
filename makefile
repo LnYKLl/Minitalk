@@ -6,14 +6,13 @@
 #    By: lkiloul <lkiloul@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/24 10:03:58 by lkiloul           #+#    #+#              #
-#    Updated: 2025/03/28 14:23:30 by lkiloul          ###   ########.fr        #
+#    Updated: 2025/03/29 13:40:51 by lkiloul          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = gcc
+CCC = gcc
 CFLAGS = -Wall -Wextra -Werror -g 
 INCLUDES = -I libft/includes -I.
-HEADERS = includes/minitalk.h
 CLIENT_SRC = client.c
 SERVER_SRC = server.c
 CLIENT_OBJ = $(CLIENT_SRC:.c=.o)
@@ -32,9 +31,6 @@ $(CLIENT): $(CLIENT_OBJ) $(LIBFT)
 
 $(SERVER): $(SERVER_OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) -o $(SERVER) $(SERVER_OBJ) -L libft -lft
-
-$(CLIENT_OBJ): $(HEADERS)
-$(SERVER_OBJ): $(HEADERS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
