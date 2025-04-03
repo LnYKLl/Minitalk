@@ -6,48 +6,51 @@
 /*   By: lkiloul <lkiloul@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 12:33:02 by lkiloul           #+#    #+#             */
-/*   Updated: 2025/03/29 15:33:22 by lkiloul          ###   ########.fr       */
+/*   Updated: 2025/04/03 16:57:01 by lkiloul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <signal.h>
 
-void send(int PID, unsigned char character)
+int send(int PID, unsigned char character)
 {
-    int i;
-    unsigned char temp;
-
-    i = 8;
-
-    temp = character;
-
-    while (i > 0)
+    unsigned int i;
+    i = 0;
+    
+    while (i < 8)
     {
-        i--;
-        temp = character >> i;
-        if (temp % 2 == 0)
-            kill(PID, SIGUSR2);
+        if (character & (0x01 << i))
+        {
+            if (kill(PID, SIGUSR1))
+                    return (0);
+        }      
         else
-            kill(PID, SIGUSR1);
-        usleep(100);
+        {
+            if (kill(PID, SIGUSR2))
+                return(0);
+        }
+        i++;
+        usleep(500);
     }
+    return(1);
 }
 
 int	main(int argc, char **argv)
 {
     pid_t PID;
     int i;
-    const char *message;
+    int len;
 
     i = 0;
+    len = 0;
 	if (argc != 3)
         return (ft_printf("error"), 0);
     PID = ft_atoi(argv[1]);
-    message = argv[2];
-    while (message[i])
+    while (*argv[2])
     {
-        send(PID, message[i++]);
+        if (PID < 0 || !send(PID, *argv[2]++))
+            ft_printf("send failed.");
     }
     send(PID, '\0');
 }
