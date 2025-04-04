@@ -6,51 +6,61 @@
 /*   By: lkiloul <lkiloul@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 12:33:02 by lkiloul           #+#    #+#             */
-/*   Updated: 2025/04/03 16:57:01 by lkiloul          ###   ########.fr       */
+/*   Updated: 2025/04/04 19:08:43 by lkiloul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <signal.h>
 
+volatile sig_atomic_t ack_received = 0;
+
+void handle_ack(int signal)
+{
+    (void)signal;
+    ack_received = 1;
+}
+
 int send(int PID, unsigned char character)
 {
     unsigned int i;
     i = 0;
-    
+
     while (i < 8)
     {
-        if (character & (0x01 << i))
+        ack_received = 0;
+        if (character & (0x80 >> i))
         {
             if (kill(PID, SIGUSR1))
-                    return (0);
-        }      
+                return (0);
+        }
         else
         {
             if (kill(PID, SIGUSR2))
-                return(0);
+                return (0);
         }
+        while (!ack_received)
+            usleep(42);
         i++;
-        usleep(500);
     }
-    return(1);
+    return (1);
 }
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     pid_t PID;
-    int i;
-    int len;
 
-    i = 0;
-    len = 0;
-	if (argc != 3)
-        return (ft_printf("error"), 0);
+    signal(SIGUSR1, handle_ack);
+    if (argc != 3)
+        return (ft_printf("error : Not enough arguments."), 0);
     PID = ft_atoi(argv[1]);
+    if (PID <= 0)
+    return (ft_printf("Error : Bad PID."), 0);
     while (*argv[2])
     {
         if (PID < 0 || !send(PID, *argv[2]++))
-            ft_printf("send failed.");
+            return(ft_printf("send failed."),  0);
+            
     }
     send(PID, '\0');
 }
