@@ -6,7 +6,7 @@
 /*   By: lkiloul <lkiloul@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 12:33:02 by lkiloul           #+#    #+#             */
-/*   Updated: 2025/04/04 19:08:43 by lkiloul          ###   ########.fr       */
+/*   Updated: 2025/04/08 15:13:04 by lkiloul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int send(int PID, unsigned char character)
                 return (0);
         }
         while (!ack_received)
-            usleep(42);
+            continue;
         i++;
     }
     return (1);
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     while (*argv[2])
     {
         if (PID < 0 || !send(PID, *argv[2]++))
-            return(ft_printf("send failed."),  0);
+            return(ft_printf("An error occured, data can't be sended.\n"),  0);
             
     }
     send(PID, '\0');

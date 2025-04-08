@@ -48,6 +48,7 @@ int main(void)
     struct sigaction sa;
 
     ft_printf("Your pid : %d\n", getpid());
+    sigemptyset(&sa.sa_mask);
     sa.sa_sigaction = signal_check;
     sa.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1, &sa, NULL);
